@@ -4,7 +4,10 @@ import com.grinderwolf.swm.plugin.commands.sub.*;
 import com.grinderwolf.swm.plugin.log.Logging;
 import lombok.Getter;
 import org.bukkit.ChatColor;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -36,6 +39,7 @@ public class CommandManager implements TabExecutor {
         commands.put("import", new ImportWorldCmd());
         commands.put("reload", new ReloadConfigCmd());
         commands.put("create", new CreateWorldCmd());
+        commands.put("debug", new DebugCmd());
     }
 
     @Override

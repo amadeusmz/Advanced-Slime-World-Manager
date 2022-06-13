@@ -5,13 +5,11 @@ import com.grinderwolf.swm.api.world.SlimeChunk;
 import com.grinderwolf.swm.api.world.SlimeChunkSection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class CraftSlimeChunk implements SlimeChunk {
 
@@ -20,12 +18,15 @@ public class CraftSlimeChunk implements SlimeChunk {
     private final int z;
 
     @Setter
-    private final SlimeChunkSection[] sections;
+    private SlimeChunkSection[] sections;
     private final CompoundTag heightMaps;
     private final int[] biomes;
     private final List<CompoundTag> tileEntities;
     private final List<CompoundTag> entities;
 
-    // Optional data for 1.13 world upgrading
-    private CompoundTag upgradeData;
+    @Setter
+    private int minSection;
+    @Setter
+    private int maxSection;
+
 }

@@ -1,19 +1,14 @@
 package com.grinderwolf.swm.api;
 
-import com.grinderwolf.swm.api.exceptions.CorruptedWorldException;
-import com.grinderwolf.swm.api.exceptions.InvalidWorldException;
-import com.grinderwolf.swm.api.exceptions.NewerFormatException;
-import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
-import com.grinderwolf.swm.api.exceptions.WorldAlreadyExistsException;
-import com.grinderwolf.swm.api.exceptions.WorldInUseException;
-import com.grinderwolf.swm.api.exceptions.WorldLoadedException;
-import com.grinderwolf.swm.api.exceptions.WorldTooBigException;
+import com.grinderwolf.swm.api.exceptions.*;
 import com.grinderwolf.swm.api.loaders.SlimeLoader;
 import com.grinderwolf.swm.api.world.SlimeWorld;
 import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Main class of the SWM API. From here, you can load
@@ -67,7 +62,13 @@ public interface SlimePlugin {
     SlimeWorld loadWorld(SlimeLoader loader, String worldName, boolean readOnly, SlimePropertyMap propertyMap) throws
             UnknownWorldException, IOException, CorruptedWorldException, NewerFormatException, WorldInUseException;
 
-    SlimeWorld getWorld(SlimeLoader loader, String worldName);
+    /**
+     * Gets a world which has already been loaded by ASWM.
+     *
+     * @param worldName the name of the world to get
+     * @return the loaded world, or {@code null} if no loaded world matches the given name
+     */
+    SlimeWorld getWorld(String worldName);
 
     /**
      * Creates an empty world and stores it using a specified
@@ -161,4 +162,14 @@ public interface SlimePlugin {
      */
     void importWorld(File worldDir, String worldName, SlimeLoader loader) throws WorldAlreadyExistsException,
             InvalidWorldException, WorldLoadedException, WorldTooBigException, IOException;
+
+    CompletableFuture<Optional<SlimeWorld>> asyncLoadWorld(SlimeLoader loader, String worldName, boolean readOnly, SlimePropertyMap propertyMap);
+
+    CompletableFuture<Optional<SlimeWorld>> asyncGetWorld(String worldName);
+
+    CompletableFuture<Optional<SlimeWorld>> asyncCreateEmptyWorld(SlimeLoader loader, String worldName, boolean readOnly, SlimePropertyMap propertyMap);
+
+    CompletableFuture<Void> asyncMigrateWorld(String worldName, SlimeLoader currentLoader, SlimeLoader newLoader);
+
+    CompletableFuture<Void> asyncImportWorld(File worldDir, String worldName, SlimeLoader loader);
 }

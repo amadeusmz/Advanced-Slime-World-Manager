@@ -27,18 +27,20 @@ SWM releases can be found [here](https://www.spigotmc.org/resources/slimeworldma
     <groupId>com.grinderwolf</groupId>
     <artifactId>slimeworldmanager-api</artifactId>
     <version>INSERT LATEST VERSION HERE</version>
+    <scope>provided</scope>
   </dependency>
 </dependencies>
 ```
 
-#### Gradle (OUTDATED)
+#### Gradle
 ```
 repositories {
-    maven { url "https://repo.glaremasters.me/repository/concuncan/" }
+    maven { url = 'https://repo.rapture.pw/repository/maven-releases/' }
+    maven { url = 'https://repo.rapture.pw/repository/maven-snapshots/' }
 }
 
 dependencies {
-    compileOnly group: "com.grinderwolf", name: "slimeworldmanager-api", version: "INSERT LATEST VERSION HERE";
+    compileOnly 'com.grinderwolf:slimeworldmanager-api:INSERT LATEST VERSION HERE'
 }
 ```
 
@@ -67,7 +69,7 @@ Javadocs can be found [here](https://grinderwolf.github.io/Slime-World-Manager/a
 
 ## Credits
 
-Thanks to:
+Thanks to: 
  * All the contributors who helped me by adding features to SWM.
  * [Glare](https://glaremasters.me) for providing me with a Maven repository.
  * [Minikloon](https://twitter.com/Minikloon) and all the [Hypixel](https://twitter.com/HypixelNetwork) team for developing the SRF.
