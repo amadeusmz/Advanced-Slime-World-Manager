@@ -2,6 +2,7 @@ package com.grinderwolf.swm.plugin;
 
 import com.flowpowered.nbt.CompoundMap;
 import com.flowpowered.nbt.CompoundTag;
+import com.google.common.collect.ImmutableList;
 import com.grinderwolf.swm.api.SlimePlugin;
 import com.grinderwolf.swm.api.events.*;
 import com.grinderwolf.swm.api.exceptions.*;
@@ -9,9 +10,10 @@ import com.grinderwolf.swm.api.loaders.SlimeLoader;
 import com.grinderwolf.swm.api.world.SlimeWorld;
 import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
 import com.grinderwolf.swm.nms.SlimeNMS;
-import com.grinderwolf.swm.nms.v1171.v1171SlimeNMS;
-import com.grinderwolf.swm.nms.v1181.v1181SlimeNMS;
 import com.grinderwolf.swm.nms.v1182.v1182SlimeNMS;
+import com.grinderwolf.swm.nms.v119.v119SlimeNMS;
+import com.grinderwolf.swm.nms.v1191.v1191SlimeNMS;
+import com.grinderwolf.swm.nms.v1192.v1192SlimeNMS;
 import com.grinderwolf.swm.nms.world.SlimeLoadedWorld;
 import com.grinderwolf.swm.plugin.commands.CommandManager;
 import com.grinderwolf.swm.plugin.config.ConfigManager;
@@ -180,9 +182,10 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
 
         int dataVersion = Bukkit.getUnsafe().getDataVersion();
         return switch (dataVersion) {
-            case 2730 -> new v1171SlimeNMS(isPaperMC);
-            case 2865 -> new v1181SlimeNMS(isPaperMC);
             case 2975 -> new v1182SlimeNMS(isPaperMC);
+            case 3105 -> new v119SlimeNMS(isPaperMC);
+            case 3117 -> new v1191SlimeNMS(isPaperMC);
+            case 3120 -> new v1192SlimeNMS(isPaperMC);
             default -> throw new InvalidVersionException("" + dataVersion);
         };
     }
@@ -281,8 +284,13 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
         return world;
     }
 
+    @Override
     public SlimeWorld getWorld(String worldName) {
         return loadedWorlds.get(worldName);
+    }
+
+    public List<SlimeWorld> getLoadedWorlds() {
+        return ImmutableList.copyOf(loadedWorlds.values());
     }
 
     @Override
