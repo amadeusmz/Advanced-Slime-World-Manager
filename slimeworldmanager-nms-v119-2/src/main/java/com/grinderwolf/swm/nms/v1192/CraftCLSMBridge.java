@@ -3,7 +3,10 @@ package com.grinderwolf.swm.nms.v1192;
 import com.grinderwolf.swm.clsm.CLSMBridge;
 import com.grinderwolf.swm.clsm.ClassModifier;
 import com.mojang.datafixers.util.Either;
+import io.papermc.paper.chunk.system.scheduling.NewChunkHolder;
+import io.papermc.paper.world.ChunkEntitySlices;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
@@ -52,30 +55,23 @@ public class CraftCLSMBridge implements CLSMBridge {
 
     @Override
     public Object loadEntities(Object storage, Object chunkCoords) {
-        EntityStorage entityStorage = (EntityStorage) storage;
-        if (!isCustomWorld(entityStorage.level)) {
-            return null;
-        }
-
-
-        return ((CustomWorldServer) entityStorage.level).handleEntityLoad(entityStorage, (ChunkPos) chunkCoords);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean storeEntities(Object storage, Object entityList) {
-        EntityStorage entityStorage = (EntityStorage) storage;
-        if (!isCustomWorld(entityStorage.level)) {
+        NewChunkHolder holder = (NewChunkHolder) storage;
+        if (!isCustomWorld(holder.world)) {
             return false;
         }
 
-        ((CustomWorldServer) entityStorage.level).handleEntityUnLoad(entityStorage, (ChunkEntities<Entity>) entityList);
+        ((CustomWorldServer) holder.world).handleEntityUnLoad((NewChunkHolder) storage, (ChunkEntitySlices) entityList);
         return true;
     }
 
     @Override
     public boolean flushEntities(Object storage) {
-        EntityStorage entityStorage = (EntityStorage) storage;
-        return isCustomWorld(entityStorage.level);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -96,5 +92,10 @@ public class CraftCLSMBridge implements CLSMBridge {
 
     static void initialize(v1192SlimeNMS instance) {
         ClassModifier.setLoader(new CraftCLSMBridge(instance));
+    }
+
+    @Override
+    public @NonNull Object getChunkTask(Object scheduler, Object world, int chunkX, int chunkZ, Object chunkHolder, Object priority, Object status) {
+        return AswmChunkProgressionTask.create(scheduler, world, chunkX, chunkZ, chunkHolder, priority, status);
     }
 }

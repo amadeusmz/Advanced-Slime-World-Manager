@@ -274,7 +274,6 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
             if (!readOnly) { // Unlock the world as we're not using it
                 loader.unlockWorld(worldName);
             }
-
             throw ex;
         }
 
@@ -473,7 +472,7 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
             } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException | WorldInUseException e) {
                 throw new IllegalStateException(e);
             }
-        });
+        }, this::runAsync);
     }
 
     @Override
@@ -490,7 +489,7 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
             var postEvent = new AsyncPostGetWorldEvent(world);
             Bukkit.getPluginManager().callEvent(postEvent);
             return Optional.ofNullable(postEvent.getSlimeWorld());
-        });
+        }, this::runAsync);
     }
 
     @Override
@@ -511,7 +510,7 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
             } catch (WorldAlreadyExistsException | IOException e) {
                 throw new IllegalStateException(e);
             }
-        });
+        }, this::runAsync);
     }
 
     @Override
@@ -531,7 +530,7 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
             } catch (IOException | WorldInUseException | WorldAlreadyExistsException | UnknownWorldException e) {
                 throw new IllegalStateException(e);
             }
-        });
+        }, this::runAsync);
     }
 
     @Override
@@ -551,7 +550,7 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
             } catch (WorldAlreadyExistsException | InvalidWorldException | WorldLoadedException | WorldTooBigException | IOException e) {
                 throw new IllegalStateException(e);
             }
-        });
+        }, this::runAsync);
     }
 
     public static boolean isPaperMC() {
@@ -560,5 +559,9 @@ public class SWMPlugin extends JavaPlugin implements SlimePlugin, Listener {
 
     public static SWMPlugin getInstance() {
         return SWMPlugin.getPlugin(SWMPlugin.class);
+    }
+
+    private void runAsync(Runnable runnable) {
+        getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 }
